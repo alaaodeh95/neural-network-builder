@@ -2,16 +2,16 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Layer, NeuralNetworkState, LayerType } from '../../types/neuralNetworkTypes';
 import initialNetwork from './initialNetwork';
 
-export const initialNetworkState: NeuralNetworkState = {
-  network: initialNetwork
-};
-
 export const neuralNetworkSlice = createSlice({
   name: 'neuralNetwork',
-  initialState: initialNetworkState,
+  initialState: initialNetwork,
   reducers: {
+    setNetwork: (state: NeuralNetworkState, action: PayloadAction<NeuralNetworkState>) => {
+      state = action.payload;
+      return state;
+    },
     addHiddenLayer: (state: NeuralNetworkState, action: PayloadAction<Layer>) => {
-      state.network.hiddenLayers.push(action.payload);
+      state.hiddenLayers.push(action.payload);
       return state;
     },
     updateLayer: (state: NeuralNetworkState, action: PayloadAction<Layer>) => {
@@ -19,25 +19,25 @@ export const neuralNetworkSlice = createSlice({
 
       switch (layer.type) {
         case LayerType.Input:
-          state.network.inputLayer = layer;
+          state.inputLayer = layer;
           return state;
         case LayerType.Output:
-          state.network.outputLayer = layer;
+          state.outputLayer = layer;
           return state;
         case LayerType.Hidden:
-          let oldLayerIndex = state.network.hiddenLayers.findIndex(l => l.id === layer.id)!;
-          state.network.hiddenLayers[oldLayerIndex] = layer;
+          let oldLayerIndex = state.hiddenLayers.findIndex(l => l.id === layer.id)!;
+          state.hiddenLayers[oldLayerIndex] = layer;
           return state;
       }
     },
     deleteHiddenLayer: (state: NeuralNetworkState, action: PayloadAction<number>) => {
-      state.network.hiddenLayers.splice(action.payload, 1);
+      state.hiddenLayers.splice(action.payload, 1);
       return state;
-    },
+    }
   }
 });
 
 
-export const { addHiddenLayer, updateLayer, deleteHiddenLayer } = neuralNetworkSlice.actions;
+export const { addHiddenLayer, updateLayer, deleteHiddenLayer, setNetwork } = neuralNetworkSlice.actions;
 
 export const neuralNetworkReducer = neuralNetworkSlice.reducer;

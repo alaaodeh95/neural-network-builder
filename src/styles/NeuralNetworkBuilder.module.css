@@ -1,14 +1,8 @@
-.builder {
-  display: flex;
-  flex-direction: row;
-  /* Align children horizontally */
-  gap: 20px;
-  /* Space between each layer */
+.networkBuilder {
   padding: 20px;
   /* Padding around the entire builder area */
   width: 1000px;
-  min-height: 500px;
-  border-radius: 20px;
+  min-height: 570px;
   /* Rounded corners */
   border: 2px solid #000000;
   /* Solid black border */
@@ -17,6 +11,15 @@
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
   /* Subtle box shadow for depth */
   color: white;
+}
+
+.builder {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  /* Align children horizontally */
+  gap: 20px;
+  /* Space between each layer */
   /* White text color for contrast */
   /* Additional styling as needed */
 }
@@ -25,7 +28,7 @@
   display: flex;
   justify-content: center;
   gap: 10px;
-  padding: 20px;
+  padding-bottom: 15px;
 }
 
 .addLayerButton {
@@ -49,15 +52,9 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   /* Deeper shadow on hover */
 }
-
-.addLayerButton:before {
-  content: '➕';
-  margin-right: 5px;
-}
-
 .deleteLayerButton {
   padding: 10px 20px;
-  background-color: #F44336;
+  background-color: #D32F2F;
   /* Red background */
   color: white;
   /* White text */
@@ -71,20 +68,8 @@
 }
 
 .deleteLayerButton:hover {
-  background-color: #D32F2F;
+  background-color: #F44336;
   /* Darker shade for hover */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   /* Deeper shadow on hover */
-}
-
-.deleteLayerButton:before {
-  content: '❌';
-  margin-right: 5px;
-}
-
-.hiddenLayersContainer {
-  display: flex;
-  justify-content: space-around;
-  /* or space-evenly */
-  flex-grow: 1;
 }

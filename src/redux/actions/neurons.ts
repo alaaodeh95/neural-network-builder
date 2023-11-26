@@ -1,5 +1,6 @@
-import { Connection, Layer, Neuron } from '../../types/neuralNetworkTypes';
-import { updateLayer } from '../reducers/neuralNetworkSlice';
+import { ActivationFunction, Connection, Layer, LayerType, Neuron } from '../../types/neuralNetworkTypes';
+import { findUniqueValues } from '../../utils/utils';
+import { addHiddenLayer, updateLayer } from '../reducers/neuralNetworkSlice';
 import { getLayer, getNextLayer, getPreviousLayer } from '../selectors/layers';
 import { ActionFn } from '../store/store';
 import { deleteLayer } from './layers';
@@ -42,6 +43,67 @@ export const addNeuron = (layerId: string): ActionFn => async (dispatch, getStat
 export const refreshNeuronConnections = (layer: Layer, nextLayer: Layer): ActionFn => async (dispatch, getState) => {
     dispatch(updateLayer({
         ...layer, neurons: layer.neurons.map(
-            neuron => ({ id: neuron.id, connections: nextLayer?.neurons.map(nextNeuron => ({ id: `${neuron.id}=>${nextNeuron.id}` } as Connection)) })),
+            neuron => ({ id: neuron.id, name: neuron.name, connections: nextLayer?.neurons.map(nextNeuron => ({ id: `${neuron.id}=>${nextNeuron.id}` } as Connection)) })),
     }))
+}
+
+// numOfHiddenNeurons only set for initilaization
+export const buildInputAndOutputNeurons = (numOfHiddenNeurons?: number): ActionFn => (dispatch, getState) => {
+    const network = getState().neuralNetwork;
+    const dataState = getState().data;
+    let firstHidden = network.hiddenLayers[0] || network.outputLayer;
+    let lastHidden = network.hiddenLayers.slice(-1)[0] || network.inputLayer;
+
+    if (numOfHiddenNeurons) {
+        const temp: Layer = {
+            id: "layer0",
+            type: LayerType.Hidden,
+            activationFunction: ActivationFunction.ReLU,
+            neurons: [
+                {
+                    id: "neuron-layer0-0", connections: []
+                }, {
+                    id: "neuron-layer0-1", connections: []
+                },
+            ]
+        }
+        firstHidden = temp;
+        lastHidden = temp;
+    }
+
+    // Output Layer handling
+    const data = dataState.availableData.filter(d => d.name === dataState.selectedData)[0];
+    const labelId = data.headers.slice(-1)[0];
+    const outputNeuronIds = findUniqueValues(data.records.map(record => record[labelId]));
+    const outputNeurons = outputNeuronIds.map((outputId, idx) => ({
+        id: `neuron-output-${idx}`,
+        name: outputId as string,
+        connections: []
+    }));
+    dispatch(updateLayer({ ...network.outputLayer, neurons: outputNeurons }));
+
+    // Handle the layer before output (Only if not input)
+    if (lastHidden.type === LayerType.Hidden) {
+        const hiddenNeurons: Neuron[] = lastHidden.neurons.map(n => ({
+            ...n,
+            connections: outputNeurons.map(on => ({
+                id: `${n.id}=>${on.id}`
+            }))
+        }));
+
+        // Update if exist
+        !numOfHiddenNeurons && dispatch(updateLayer({ ...lastHidden, neurons: hiddenNeurons }));
+        numOfHiddenNeurons && dispatch(addHiddenLayer({ ...lastHidden, neurons: hiddenNeurons }));
+    }
+
+    // Input layer handling
+    const inputNeuronsIds = data.headers.slice(0, data.headers.length - 1);
+    const inputNeurons: Neuron[] = inputNeuronsIds.map((inputId, idx) => ({
+        id: `neuron-input-${idx}`,
+        name: inputId,
+        connections: firstHidden.neurons.map(neuron => ({
+            id: `neuron-input-${idx}=>${neuron.id}`
+        }))
+    }));
+    dispatch(updateLayer({ ...network.inputLayer, neurons: inputNeurons }));
 }

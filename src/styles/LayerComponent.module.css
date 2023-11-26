@@ -8,16 +8,17 @@
 }
 
 .inputLayer {
-  padding-left: 20px;
+  width: 120px;
+  padding-top: 58px;
 }
 
 .outputLayer {
-  padding-right: 20px;
+  width: 120px;
 }
 
 .outputLayerWithoutHidden {
   margin-left: auto;
-  padding-right: 20px;
+  width: 120px;
 }
 
 .layerControls {
@@ -52,4 +53,8 @@
   
   .layerName {
     font-size: 26px;
+  }
+
+  .activationFunction {
+    width: 100px;
   }

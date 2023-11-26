@@ -3,6 +3,13 @@
     "development"
   ],
   "hints": {
-    "compat-api/css": "off"
+    "compat-api/css": "off",
+    "axe/forms": [
+      "default",
+      {
+        "label": "off"
+      }
+    ],
+    "no-inline-styles": "off"
   }
 }
