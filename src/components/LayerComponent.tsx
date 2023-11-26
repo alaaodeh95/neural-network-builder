@@ -62,11 +62,7 @@ export const LayerComponent: React.FC<LayerProps> = ({ layer }) => {
                             : outputLayerAF
                     }
                     onChange={onActivationChange}
-                    defaultSelectedKey={
-                        layer.type === LayerType.Hidden
-                            ? ActivationFunction.ReLU
-                            : ActivationFunction.Softmax
-                    }
+                    selectedKey={layer.activationFunction}
                     className={styles.activationFunction}
                 />
             )}
