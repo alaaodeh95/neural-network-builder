@@ -1,8 +1,0 @@
-{
-  "appService.zipIgnorePattern": [
-    "node_modules{,/**}",
-    ".vscode{,/**}"
-  ],
-  "appService.defaultWebAppToDeploy": "/subscriptions/be8fb258-7f14-49e3-8919-3324bec25d90/resourceGroups/alaaodeh/providers/Microsoft.Web/sites/alaa-checkers",
-  "appService.deploySubpath": "."
-}

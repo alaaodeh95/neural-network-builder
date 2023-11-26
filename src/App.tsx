@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import GameBoard from './components/GameBoard';
-import GameControls from './components/GameControls';
 import './styles/styles.css';
 import LoadingScreen from './components/LoadingScreen';
-import PieceCounter from './components/PieceCounter';
+import { NeuralNetworkBuilder } from './components/NeuralNetworkBuilder';
 
 function App() {
     const [isLoading, setIsLoading] = useState(true);
@@ -12,9 +10,7 @@ function App() {
     return (
         <div>
             {isLoading && <LoadingScreen />}
-            <GameControls />
-            <GameBoard />
-            <PieceCounter />
+            <NeuralNetworkBuilder />
         </div>
     );
 }

@@ -1,5 +1,5 @@
-import { gameReducer } from './gameSlice';
+import { neuralNetworkReducer } from './neuralNetworkSlice';
 
 export const reducer = {
-    game: gameReducer,
+    neuralNetwork: neuralNetworkReducer,
 };

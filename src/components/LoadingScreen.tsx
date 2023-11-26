@@ -1,4 +1,4 @@
-import '../styles/loading.css'; // Import the CSS file for styling
+import '../styles/Loading.module.css'; // Import the CSS file for styling
 
 const LoadingScreen = () => {
   return (

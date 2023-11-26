@@ -1,2 +1,1 @@
-export const MIN_BOARD = 0;
-export const MAX_BOARD = 7;
+export const X = 0;

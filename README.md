@@ -1,15 +1,12 @@
 
-## Checkers using Alpha beta
-This Checkers game is designed to adhere to the official tournament rules as outlined at [startcheckers.com](https://startcheckers.com/the-rules-of-checkers/). Players can choose between two modes: a two-player mode for playing against another human, and a one-player mode for playing against a computer-controlled bot. The game offers three levels of difficulty, allowing players to adjust the challenge according to their skills. 
-
-Flexibility is a key feature, as players have the option to reset the game or switch modes and difficulty levels at any stage. Additionally, the game interface is designed to be user-friendly, highlighting movable pieces and indicating allowed moving positions. It also keeps players informed by displaying the count of available pieces for both players, ensuring a smooth and engaging gaming experience.
+## Neural network build
 
 
 ## Screenshots
 <p align="center">
-  <img src="./readme-images/image-2.png" alt="Alt text" width="33%" />
-  <img src="./readme-images/image-1.png" alt="Alt text" width="33%" />
-  <img src="./readme-images/image-3.png" alt="Alt text" width="33%" />
+  <img src="./readme-images/" alt="Alt text" width="50%" />
+    <img src="./readme-images/" alt="Alt text" width="50%" />
+
 </p>
 
 ### AI Strategy and Evaluation Function

@@ -4,11 +4,11 @@ import App from './App';
 import { createStore } from './redux/store/store';
 import { Provider } from 'react-redux';
 import reportWebVitals from './reportWebVitals';
-import { initialGameState } from './redux/reducers/gameSlice';
+import { initialNetworkState } from './redux/reducers/neuralNetworkSlice';
 
 ReactDOM.render(
     <React.StrictMode>
-        <Provider store={createStore(initialGameState)}>
+        <Provider store={createStore(initialNetworkState)}>
             <App />
         </Provider>
     </React.StrictMode>,

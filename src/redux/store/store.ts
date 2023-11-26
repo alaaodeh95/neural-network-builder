@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { reducer } from '../reducers';
-import { GameState } from '../../types/gameTypes';
+import { NeuralNetworkState } from '../../types/neuralNetworkTypes';
 
-export const createStore = (game: GameState) =>
+export const createStore = (neuralNetwork: NeuralNetworkState) =>
     configureStore({
         reducer,
         preloadedState: {
-            game,
+            neuralNetwork,
         },
     });
 

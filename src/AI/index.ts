@@ -1,2 +1,1 @@
-export * from './aplhaBeta';
-export * from './evaluate';
+export const X = 0;
