@@ -1,0 +1,55 @@
+.layer {
+    display: flex;
+    flex-direction: column;
+    /* Stack neurons vertically */
+    align-items: center;
+    /* Center neurons */
+    gap: 25px;
+}
+
+.inputLayer {
+  padding-left: 20px;
+}
+
+.outputLayer {
+  padding-right: 20px;
+}
+
+.outputLayerWithoutHidden {
+  margin-left: auto;
+  padding-right: 20px;
+}
+
+.layerControls {
+    display: flex;
+    gap: 5px;
+}
+
+.circleButton { 
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px; /* Small size */
+    height: 30px; /* Circular shape */
+    border-radius: 50%; /* Circular shape */
+    background-color: #2196F3; /* A pleasant green background, you can change the color */
+    color: white; /* Text color */
+    font-size: 20px; /* Size of the '+' or '-' sign */
+    border: none; /* No border */
+    cursor: pointer; /* Cursor changes to pointer to indicate it's clickable */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* A subtle shadow for a 3D effect */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transition for hover effect */
+  }
+  
+  .circleButton:hover {
+    background-color: #0D47A1; /* Darker shade when hovered */
+    transform: scale(1.1); /* Slightly larger on hover for a nice effect */
+  }
+  
+  .circleButton:focus {
+    outline: none; /* Remove outline on focus for aesthetic purposes */
+  }
+  
+  .layerName {
+    font-size: 26px;
+  }

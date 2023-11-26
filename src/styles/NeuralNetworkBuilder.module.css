@@ -1,0 +1,90 @@
+.builder {
+  display: flex;
+  flex-direction: row;
+  /* Align children horizontally */
+  gap: 20px;
+  /* Space between each layer */
+  padding: 20px;
+  /* Padding around the entire builder area */
+  width: 1000px;
+  min-height: 500px;
+  border-radius: 20px;
+  /* Rounded corners */
+  border: 2px solid #000000;
+  /* Solid black border */
+  background-color: rgba(0, 0, 0, 0.6);
+  /* Black background with 50% opacity */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+  /* Subtle box shadow for depth */
+  color: white;
+  /* White text color for contrast */
+  /* Additional styling as needed */
+}
+
+.hiddenLayerControlsContainer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+}
+
+.addLayerButton {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  /* Green background */
+  color: white;
+  /* White text */
+  border: none;
+  border-radius: 5px;
+  /* Slightly rounded corners */
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.addLayerButton:hover {
+  background-color: #388E3C;
+  /* Darker shade for hover */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  /* Deeper shadow on hover */
+}
+
+.addLayerButton:before {
+  content: '➕';
+  margin-right: 5px;
+}
+
+.deleteLayerButton {
+  padding: 10px 20px;
+  background-color: #F44336;
+  /* Red background */
+  color: white;
+  /* White text */
+  border: none;
+  border-radius: 5px;
+  /* Slightly rounded corners */
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.deleteLayerButton:hover {
+  background-color: #D32F2F;
+  /* Darker shade for hover */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  /* Deeper shadow on hover */
+}
+
+.deleteLayerButton:before {
+  content: '❌';
+  margin-right: 5px;
+}
+
+.hiddenLayersContainer {
+  display: flex;
+  justify-content: space-around;
+  /* or space-evenly */
+  flex-grow: 1;
+}
