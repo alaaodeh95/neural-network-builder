@@ -11,6 +11,7 @@ export const initialState: TrainingSettingsState = {
     testingPercentage: 15,
     isTraining: false,
     isPredecting: false,
+    isTrained: false,
 };
 
 const trainingSettingsSlice = createSlice({
@@ -57,6 +58,10 @@ const trainingSettingsSlice = createSlice({
             state.isPredecting = action.payload;
             return state;
         },
+        setIsTrained(state, action: PayloadAction<boolean>) {
+            state.isTrained = action.payload;
+            return state;
+        },
     },
 });
 
@@ -71,6 +76,7 @@ export const {
     setTrainingState,
     setPredictingState,
     setSettings,
+    setIsTrained,
 } = trainingSettingsSlice.actions;
 
 export const trainingSettingsReducer = trainingSettingsSlice.reducer;

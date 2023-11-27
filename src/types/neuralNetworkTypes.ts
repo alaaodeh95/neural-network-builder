@@ -38,17 +38,20 @@ export interface TrainingSettingsState {
     testingPercentage: number;
     isTraining: boolean;
     isPredecting: boolean;
+    isTrained: boolean;
 }
 
 export interface DataState {
     availableData: Data[];
     selectedData: string;
-    weights: Weight[];
+    weights: Weight;
+    thresholds: Threshold;
 }
 
 export interface Model {
     architecture: NeuralNetworkState;
-    weights: Weight[];
+    weights: Weight;
+    thresholds: Threshold;
     parameters: TrainingSettingsState;
 }
 
@@ -66,7 +69,22 @@ export interface WorkerCommand {
 
 export interface WorkerResponse {
     type: CommandType
-    weights?: Weight[];
+}
+
+export interface TrainingWorkerResponse extends TestingWorkerResponse {
+    weights: Weight;
+    thresholds: Threshold;
+    trainingLoss: number;
+    validationLoss: number;
+    trainingAccuracy: number;
+    validationAccuracy: number;
+    numOfEpochs: number;
+    isFinishedTraining: boolean;
+}
+
+export interface TestingWorkerResponse extends WorkerResponse {
+    testingLoss: number;
+    testingAccuracy: number;
 }
 
 export enum ActivationFunction {
@@ -92,3 +110,5 @@ export interface Data {
 
 export type Record = { [key: string]: number | string };
 export type Weight = { [key: string]: number };
+export type Threshold = { [key: string]: number };
+export type NeuronState = { [key: string]: { value: number, logit?: number, error?: number, gradientError?: number, predicted?: number} }; // predicted is used as value for output layer, while value is the actual value in output layer

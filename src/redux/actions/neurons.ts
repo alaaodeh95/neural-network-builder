@@ -51,6 +51,7 @@ export const refreshNeuronConnections = (layer: Layer, nextLayer: Layer): Action
 export const buildInputAndOutputNeurons = (numOfHiddenNeurons?: number): ActionFn => (dispatch, getState) => {
     const network = getState().neuralNetwork;
     const dataState = getState().data;
+    const data = dataState.availableData.filter(d => d.name === dataState.selectedData)[0];
     let firstHidden = network.hiddenLayers[0] || network.outputLayer;
     let lastHidden = network.hiddenLayers.slice(-1)[0] || network.inputLayer;
 
@@ -59,20 +60,15 @@ export const buildInputAndOutputNeurons = (numOfHiddenNeurons?: number): ActionF
             id: "layer0",
             type: LayerType.Hidden,
             activationFunction: ActivationFunction.ReLU,
-            neurons: [
-                {
-                    id: "neuron-layer0-0", connections: []
-                }, {
-                    id: "neuron-layer0-1", connections: []
-                },
-            ]
+            neurons: Array(data.headers.length - 1).fill(0).map((_, idx) => ({
+                id: `neuron-layer0-${idx}`, connections: []
+            })),
         }
         firstHidden = temp;
         lastHidden = temp;
     }
 
     // Output Layer handling
-    const data = dataState.availableData.filter(d => d.name === dataState.selectedData)[0];
     const labelId = data.headers.slice(-1)[0];
     const outputNeuronIds = findUniqueValues(data.records.map(record => record[labelId]));
     const outputNeurons = outputNeuronIds.map((outputId, idx) => ({

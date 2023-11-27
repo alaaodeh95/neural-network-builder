@@ -14,13 +14,14 @@ import {
     setTrainingState,
     setPredictingState,
     setSettings,
+    setIsTrained,
 } from '../redux/reducers/trainingSettingsSlice';
 import { LossFunction, Model, Record } from '../types/neuralNetworkTypes';
 import Papa from 'papaparse';
 import { useAppDispatch } from '../redux/store/hooks';
 import { buildInputAndOutputNeurons } from '../redux/actions/neurons';
 import styles from '../styles/TrainingSettings.module.css';
-import { addAndSetTrainingData, setSelectedData, setWeights } from '../redux/reducers/dataSlice';
+import { addAndSetTrainingData, setSelectedData, setThresholds, setWeights } from '../redux/reducers/dataSlice';
 import { saveModel } from '../redux/actions/model';
 import { setNetwork } from '../redux/reducers/neuralNetworkSlice';
 
@@ -29,6 +30,12 @@ const stackStyles: Partial<IStackStyles> = {
         width: '100%',
         padding: 20,
         backgroundColor: 'rgba(0, 0, 0, 0.8)', // Black background with opacity
+    },
+};
+
+const innerStackStyles: Partial<IStackStyles> = {
+    root: {
+        marginTop: 20,
     },
 };
 
@@ -67,9 +74,9 @@ const sliderStyles = {
 
 const TrainingSettings: React.FC = () => {
     const settings = useSelector((state: RootState) => state.settings);
-    const data = useSelector((state: RootState) => state.data);
-    const isTrained = data.weights.length;
-
+    const availableData = useSelector((state: RootState) => state.data.availableData);
+    const selectedData = useSelector((state: RootState) => state.data.selectedData);
+    
     const dispatch = useDispatch();
     const appDispatch = useAppDispatch();
     const fileInputLoadDataRef = useRef<HTMLInputElement>(null);
@@ -134,8 +141,10 @@ const TrainingSettings: React.FC = () => {
                 try {
                     const json = JSON.parse(text as string) as Model;
                     dispatch(setWeights(json.weights));
+                    dispatch(setThresholds(json.thresholds));
                     dispatch(setNetwork(json.architecture));
                     dispatch(setSettings(json.parameters));
+                    dispatch(setIsTrained(true));
                 } catch (error) {
                     console.error('Error parsing JSON:', error);
                 }
@@ -174,14 +183,14 @@ const TrainingSettings: React.FC = () => {
 
     return (
         <Stack horizontal tokens={{ childrenGap: 35 }} styles={stackStyles}>
-            <Stack>
+            <Stack styles={innerStackStyles} >
                 <Dropdown
                     label="Input Data"
-                    options={data.availableData.map(data => ({
+                    options={availableData.map(data => ({
                         text: data.name,
                         key: data.name,
                     }))}
-                    selectedKey={data.selectedData}
+                    selectedKey={selectedData}
                     styles={dropdownStyles}
                     onChange={handleSelectDataChange}
                 />
@@ -206,13 +215,13 @@ const TrainingSettings: React.FC = () => {
                     />
                 </div>
             </Stack>
-            <Stack>
-                <TextField label="Learning Rate" styles={controlStyles} type="number" value={settings.learningRate.toString()} onChange={handleLearningRateChange} />
+            <Stack styles={innerStackStyles} >
+                <TextField label="Learning Rate" styles={controlStyles}  step={0.001} value={settings.learningRate.toString()} onChange={handleLearningRateChange} />
                 <TextField label="Maximum # of Epochs" styles={controlStyles} type="number" value={settings.maxEpochs.toString()} onChange={handleMaxEpochsChange} />
             </Stack>
-            <Stack>
+            <Stack styles={innerStackStyles} >
                 <Dropdown label="Loss Function" options={lossFunctionSelectOptions} styles={dropdownStyles} selectedKey={settings.lossFunction} onChange={handleLossFunctionChange} />
-                <TextField label="Stop on Loss Value" styles={controlStyles} type="number" value={settings.stopLossValue.toString()} onChange={handleStopLossValueChange} />
+                <TextField label="Stop on Loss Value" styles={controlStyles}  step={0.001} value={settings.stopLossValue.toString()} onChange={handleStopLossValueChange} />
             </Stack>
             <Stack.Item
                 align="end"
@@ -229,7 +238,7 @@ const TrainingSettings: React.FC = () => {
                 <Slider label="Testing Percentage" min={5} max={25} step={5} styles={sliderStyles} value={settings.testingPercentage} onChange={handleTestingPercentageChange} />
             </Stack.Item>
             <Separator vertical className={styles.customSeparator} />
-            <Stack style={{ marginTop: 20, gap: 10 }}>
+            <Stack style={{ gap: 10 }}>
                 <Stack.Item
                     align="center"
                     styles={{
@@ -264,7 +273,7 @@ const TrainingSettings: React.FC = () => {
                             },
                         }}>
                         <PrimaryButton
-                            disabled={settings.isPredecting || !isTrained}
+                            disabled={settings.isPredecting || !settings.isTrained}
                             styles={{
                                 root: {
                                     width: '80px',
@@ -296,7 +305,7 @@ const TrainingSettings: React.FC = () => {
                                 borderRadius: 10,
                             },
                         }}
-                        disabled={!!!data.weights.length}
+                        disabled={!settings.isTrained}
                         onClick={() => appDispatch(saveModel)}>
                         Save
                     </PrimaryButton>

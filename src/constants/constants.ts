@@ -3,10 +3,7 @@ import { ActivationFunction, LossFunction } from "../types/neuralNetworkTypes";
 
 export const hiddenLayersAF: ISelectOption[] = [
     { key: ActivationFunction.ReLU, text: ActivationFunction.ReLU },
-    {
-        key: ActivationFunction.LeakyReLU,
-        text: ActivationFunction.LeakyReLU,
-    },
+    { key: ActivationFunction.LeakyReLU, text: ActivationFunction.LeakyReLU },
     { key: ActivationFunction.Tanh, text: ActivationFunction.Tanh },
     { key: ActivationFunction.Sigmoid, text: ActivationFunction.Sigmoid },
 ];
