@@ -19,7 +19,7 @@ export const deleteNeuron = (layerId: string): ActionFn => async (dispatch, getS
     const previousLayer = getPreviousLayer(layer)(state);
     previousLayer && dispatch(updateLayer({
         ...previousLayer, neurons: previousLayer.neurons.map(
-            neuron => ({ id: neuron.id, connections: neuron.connections.filter(connection => !connection.id.includes(neuronId)) })),
+            neuron => ({ id: neuron.id, name: neuron.name, connections: neuron.connections.filter(connection => !connection.id.includes(neuronId)) })),
     }));
     dispatch(updateLayer({ ...layer, neurons: layer.neurons.slice(0, -1) }));
 }
