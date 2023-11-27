@@ -44,3 +44,26 @@
     background-color: rgba(255, 255, 255, 0.1);
   }
   
+
+  .clearButton {
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: 2px solid black;
+  }
+  
+  .clearButton:hover {
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+  }
+  
+  /* Optional: focus styles to outline the button when it's focused */
+  .clearButton:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5);
+  }
+  

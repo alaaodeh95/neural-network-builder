@@ -16,8 +16,11 @@ export const logsSlice = createSlice({
         log: (state, action: PayloadAction<string>) => {
             state.logs.push(action.payload);
         },
+        clearLogs: (state) => {
+            state.logs = [];
+        }
     },
 });
 
-export const { log } = logsSlice.actions;
+export const { log, clearLogs } = logsSlice.actions;
 export const logsReducer = logsSlice.reducer;

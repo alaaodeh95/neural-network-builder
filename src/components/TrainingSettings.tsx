@@ -83,7 +83,8 @@ const TrainingSettings: React.FC = () => {
     const fileInputLoadModelRef = useRef<HTMLInputElement>(null);
 
     const handleLearningRateChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-        dispatch(setLearningRate(newValue ? parseFloat(newValue) : 0));
+        const numericValue = newValue && parseFloat(newValue);
+        numericValue && dispatch(setLearningRate(numericValue));
     };
 
     const handleMaxEpochsChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
@@ -97,7 +98,8 @@ const TrainingSettings: React.FC = () => {
     };
 
     const handleStopLossValueChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-        dispatch(setStopLossValue(newValue ? parseFloat(newValue) : 0));
+        const numericValue = newValue && parseFloat(newValue);
+        numericValue && dispatch(setStopLossValue(numericValue));
     };
 
     const handleTrainingPercentageChange = (value: number) => {
@@ -216,12 +218,12 @@ const TrainingSettings: React.FC = () => {
                 </div>
             </Stack>
             <Stack styles={innerStackStyles} >
-                <TextField label="Learning Rate" styles={controlStyles}  step={0.001} value={settings.learningRate.toString()} onChange={handleLearningRateChange} />
+                <TextField label="Learning Rate" styles={controlStyles} type="number" value={settings.learningRate.toString()} onChange={handleLearningRateChange} />
                 <TextField label="Maximum # of Epochs" styles={controlStyles} type="number" value={settings.maxEpochs.toString()} onChange={handleMaxEpochsChange} />
             </Stack>
             <Stack styles={innerStackStyles} >
                 <Dropdown label="Loss Function" options={lossFunctionSelectOptions} styles={dropdownStyles} selectedKey={settings.lossFunction} onChange={handleLossFunctionChange} />
-                <TextField label="Stop on Loss Value" styles={controlStyles}  step={0.001} value={settings.stopLossValue.toString()} onChange={handleStopLossValueChange} />
+                <TextField label="Stop on Loss Value" styles={controlStyles} type="number" value={settings.stopLossValue.toString()} onChange={handleStopLossValueChange} />
             </Stack>
             <Stack.Item
                 align="end"
