@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Stack, TextField, Dropdown, Slider, PrimaryButton, IStackStyles, ITextFieldStyles, IDropdownStyles, IDropdownOption, Spinner, SpinnerSize, Separator } from '@fluentui/react';
 import { lossFunctionSelectOptions } from '../constants/constants';
 import { useSelector, useDispatch } from 'react-redux';
@@ -76,15 +76,17 @@ const TrainingSettings: React.FC = () => {
     const settings = useSelector((state: RootState) => state.settings);
     const availableData = useSelector((state: RootState) => state.data.availableData);
     const selectedData = useSelector((state: RootState) => state.data.selectedData);
-    
+    const [learningRateText, setLearningRateText] = useState(settings.learningRate.toString());
+    const [lossValueText, setLossValueText] = useState(settings.stopLossValue.toString());
+
     const dispatch = useDispatch();
     const appDispatch = useAppDispatch();
     const fileInputLoadDataRef = useRef<HTMLInputElement>(null);
     const fileInputLoadModelRef = useRef<HTMLInputElement>(null);
 
-    const handleLearningRateChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-        const numericValue = newValue && parseFloat(newValue);
-        numericValue && dispatch(setLearningRate(numericValue));
+    const handleLearningRateChange = () => {
+        const value = parseFloat(learningRateText);
+        value && dispatch(setLearningRate(value));
     };
 
     const handleMaxEpochsChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
@@ -97,9 +99,9 @@ const TrainingSettings: React.FC = () => {
         }
     };
 
-    const handleStopLossValueChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-        const numericValue = newValue && parseFloat(newValue);
-        numericValue && dispatch(setStopLossValue(numericValue));
+    const handleStopLossValueChange = () => {
+        const value = parseFloat(lossValueText);
+        value && dispatch(setStopLossValue(value));
     };
 
     const handleTrainingPercentageChange = (value: number) => {
@@ -218,12 +220,12 @@ const TrainingSettings: React.FC = () => {
                 </div>
             </Stack>
             <Stack styles={innerStackStyles} >
-                <TextField label="Learning Rate" styles={controlStyles} type="number" value={settings.learningRate.toString()} onChange={handleLearningRateChange} />
+                <TextField label="Learning Rate" styles={controlStyles} value={learningRateText} onChange={(_, v) => setLearningRateText(v ?? '')} onBlur={handleLearningRateChange}/>
                 <TextField label="Maximum # of Epochs" styles={controlStyles} type="number" value={settings.maxEpochs.toString()} onChange={handleMaxEpochsChange} />
             </Stack>
             <Stack styles={innerStackStyles} >
                 <Dropdown label="Loss Function" options={lossFunctionSelectOptions} styles={dropdownStyles} selectedKey={settings.lossFunction} onChange={handleLossFunctionChange} />
-                <TextField label="Stop on Loss Value" styles={controlStyles} type="number" value={settings.stopLossValue.toString()} onChange={handleStopLossValueChange} />
+                <TextField label="Stop on Loss Value" styles={controlStyles} value={lossValueText} onChange={(_, v) => setLossValueText(v ?? '')} onBlur={handleStopLossValueChange} />
             </Stack>
             <Stack.Item
                 align="end"
