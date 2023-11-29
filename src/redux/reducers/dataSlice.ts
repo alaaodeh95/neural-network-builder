@@ -6,6 +6,8 @@ export const initialDataState: DataState = {
     selectedData: '',
     weights: {},
     thresholds: {},
+    selectedDataClasses: [],
+    selectedDataLabelId: '',
 };
 
 export const dataSlice = createSlice({

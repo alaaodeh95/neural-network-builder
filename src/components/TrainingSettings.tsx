@@ -101,7 +101,7 @@ const TrainingSettings: React.FC = () => {
 
     const handleStopLossValueChange = () => {
         const value = parseFloat(lossValueText);
-        value && dispatch(setStopLossValue(value));
+        value !== undefined && dispatch(setStopLossValue(value));
     };
 
     const handleTrainingPercentageChange = (value: number) => {

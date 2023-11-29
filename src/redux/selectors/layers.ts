@@ -38,7 +38,7 @@ export const getPreviousLayer = (layer: Layer) => (state: RootState) => {
     const numOfLayers = getNumberOfLayers(state);
     if (layer.type === LayerType.Input) return null;
     if (numOfLayers === 2) return state.neuralNetwork.inputLayer;
-    if(layer.type === LayerType.Output) return state.neuralNetwork.hiddenLayers[-1];
+    if(layer.type === LayerType.Output) return state.neuralNetwork.hiddenLayers[state.neuralNetwork.hiddenLayers.length - 1];
     const indexOfHidden = parseInt(layer.id.replace('layer', ''))
     if (indexOfHidden === 0) return state.neuralNetwork.inputLayer;
     return state.neuralNetwork.hiddenLayers[indexOfHidden - 1]; 

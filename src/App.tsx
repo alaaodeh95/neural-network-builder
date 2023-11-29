@@ -15,6 +15,8 @@ import { RootState } from './redux/store/store';
 import { setIsTrained, setPredictingState, setTrainingState } from './redux/reducers/trainingSettingsSlice';
 import LogsComponent from './components/LogsComponent';
 import { log } from './redux/reducers/logsSlice';
+import { Stack } from '@fluentui/react';
+import ChartComponent from './components/ChartComponent';
 
 function App() {
     const dispatch = useDispatch();
@@ -46,7 +48,9 @@ function App() {
                     const response = e.data as TrainingWorkerResponse;
                     dispatch(
                         log(
-                            `Finished epoch ${response.numOfEpochs}: accuracy = ${response.trainingAccuracy.toFixed(4)}, loss = ${response.trainingLoss.toFixed(4)}, validation accuracy = ${response.validationAccuracy.toFixed(4)}, validation loss = ${response.validationLoss.toFixed(4)}`
+                            `Finished epoch ${response.numOfEpochs}: accuracy = ${response.trainingAccuracy.toFixed(4)}, loss = ${response.trainingLoss.toFixed(
+                                4
+                            )}, validation accuracy = ${response.validationAccuracy.toFixed(4)}, validation loss = ${response.validationLoss.toFixed(4)}`
                         )
                     );
                     // Update the model (for saving) once finished training
@@ -86,9 +90,14 @@ function App() {
     return (
         <div>
             {isLoading && <LoadingScreen />}
-            {!isLoading && <TrainingSettingsComponent />}
-            {!isLoading && <NeuralNetworkBuilder />}
-            {!isLoading && <LogsComponent />}
+            <Stack horizontal>
+                <div>
+                    {!isLoading && <TrainingSettingsComponent />}
+                    {!isLoading && <NeuralNetworkBuilder />}
+                    {!isLoading && <LogsComponent />}
+                </div>
+                <ChartComponent isOriginalData={false} />
+            </Stack>
         </div>
     );
 }

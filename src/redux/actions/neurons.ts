@@ -6,9 +6,9 @@ import { ActionFn } from '../store/store';
 import { deleteLayer } from './layers';
 
 
-export const deleteNeuron = (layerId: string): ActionFn => async (dispatch, getState) => {
+export const deleteNeuron = (layerId: string, fromLayer?: Layer): ActionFn => async (dispatch, getState) => {
     const state = getState();
-    const layer = getLayer(layerId)(state);
+    const layer = fromLayer || getLayer(layerId)(state);
 
     if (layer.neurons.length === 1) {
         dispatch(deleteLayer(parseInt(layer.id.replace('layer', ''))));
@@ -24,13 +24,14 @@ export const deleteNeuron = (layerId: string): ActionFn => async (dispatch, getS
     dispatch(updateLayer({ ...layer, neurons: layer.neurons.slice(0, -1) }));
 }
 
-export const addNeuron = (layerId: string): ActionFn => async (dispatch, getState) => {
+export const addNeuron = (layerId: string, toLayer?: Layer, neuronName?: string): ActionFn => async (dispatch, getState) => {
     const state = getState();
-    const layer = getLayer(layerId)(state);
+    const layer = toLayer || getLayer(layerId)(state);
     const nextLayer = getNextLayer(layer)(state);
     const neuronId = `neuron-${layer.id}-${layer.neurons.length}`;
     const newNeuron: Neuron = {
         id: neuronId,
+        name: neuronName,
         connections: nextLayer?.neurons.map(neuron => ({ id: `${neuronId}=>${neuron.id}` } as Connection)) || [],
     };
     const newLayer = { ...layer, neurons: [...layer.neurons, newNeuron] };

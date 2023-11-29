@@ -3,13 +3,13 @@ import { TrainingSettingsState, Layer, Record, Weight, NeuronState, LayerType, A
 import { activateNeurons, calculateAFDerivative } from "./activationFunctions";
 import { calculateErrorForVector } from "./evaluation";
 
-export const trainNeuralNetwork = (weights: Weight, thresholds: Threshold, layers: Layer[], parameters: TrainingSettingsState, trainingData: Record[], validationData: Record[], testingData: Record[]) => {
+export const trainNeuralNetwork = (weights: Weight, thresholds: Threshold, layers: Layer[], parameters: TrainingSettingsState, trainingData: Record[], validationData: Record[], testingData: Record[], labelId: string) => {
     let epoch = 1;
     let lastEpochTrainingAccuracy, lastEpochValidationAccuracy, lastEpochTrainingLoss, lastEpochValidationLoss;
     for (; epoch <= parameters.maxEpochs; epoch++) {
         // For each record perform a forward and backward propogation to complete an iternation within the current epoch
-        const { accuracy: trainingAccuracy, lossValue: trainingLoss } = runNeuralNetworkForRecords(trainingData, weights, thresholds, layers, parameters, true);
-        const { accuracy: validationAccuracy, lossValue: validationLoss } = runNeuralNetworkForRecords(validationData, weights, thresholds, layers, parameters, false);
+        const { accuracy: trainingAccuracy, lossValue: trainingLoss } = runNeuralNetworkForRecords(trainingData, labelId, weights, thresholds, layers, parameters, true);
+        const { accuracy: validationAccuracy, lossValue: validationLoss } = runNeuralNetworkForRecords(validationData, labelId, weights, thresholds, layers, parameters, false);
         
         lastEpochTrainingAccuracy = trainingAccuracy; lastEpochTrainingLoss = trainingLoss; lastEpochValidationAccuracy = validationAccuracy; lastEpochValidationLoss = validationLoss;
 
@@ -32,7 +32,7 @@ export const trainNeuralNetwork = (weights: Weight, thresholds: Threshold, layer
     }
 
     // After all epochs run the unseen test data
-    const { accuracy: testingAccuracy, lossValue: testingLoss } = runNeuralNetworkForRecords(testingData, weights, thresholds, layers, parameters, false);
+    const { accuracy: testingAccuracy, lossValue: testingLoss } = runNeuralNetworkForRecords(testingData, labelId, weights, thresholds, layers, parameters, false);
     self.postMessage({
         type: CommandType.Train,
         weights,
@@ -49,14 +49,14 @@ export const trainNeuralNetwork = (weights: Weight, thresholds: Threshold, layer
 };
 
 
-export const runNeuralNetworkForRecords = (records: Record[], weights: Weight, thresholds: Threshold, layers: Layer[], parameters: TrainingSettingsState, isTraining: boolean) => {
+export const runNeuralNetworkForRecords = (records: Record[], labelId: string, weights: Weight, thresholds: Threshold, layers: Layer[], parameters: TrainingSettingsState, isTraining: boolean) => {
     let sumOfTrainingErrors = 0;
     let numberOfTrainingSamples = 0;
     let numberOfCorrectPredictedLabels = 0;
     for (const record of records) {
         // Feed forward iteration
         const thresholdsCorrection: Threshold = {};
-        const neuronsState: NeuronState = feedForwardIteration(weights, layers, parameters, record, isTraining, thresholds, thresholdsCorrection);
+        const neuronsState: NeuronState = feedForwardIteration(weights, layers, parameters, record, labelId, isTraining, thresholds, thresholdsCorrection);
 
         // Only run backward propagation in training mode
         if (isTraining) {
@@ -77,7 +77,7 @@ export const runNeuralNetworkForRecords = (records: Record[], weights: Weight, t
         let predictVector = outputNeurons.map(neuron => neuronsState[neuron.id].predicted!);
         let actualVector = outputNeurons.map(neuron => neuronsState[neuron.id].value!);
         numberOfTrainingSamples++;
-        sumOfTrainingErrors += calculateErrorForVector(predictVector, actualVector, parameters.lossFunction);
+        sumOfTrainingErrors += calculateErrorForVector(predictVector, actualVector, parameters.lossFunction, layers[layers.length - 1].activationFunction);
 
         // Calculate whether it's correct predection or not. // For simplicity, I will take the neuron with highest predection and check whether it's true lable is one or not
         let indexOfTheRightLabel = outputNeurons.findIndex(neuron => neuronsState[neuron.id].value === 1);
@@ -90,7 +90,7 @@ export const runNeuralNetworkForRecords = (records: Record[], weights: Weight, t
     return { accuracy: numberOfCorrectPredictedLabels / numberOfTrainingSamples, lossValue: parameters.lossFunction === LossFunction.SSE ? sumOfTrainingErrors : sumOfTrainingErrors / numberOfTrainingSamples }
 }
 
-const feedForwardIteration = (weights: Weight, layers: Layer[], parameters: TrainingSettingsState, record: Record, isTraining: boolean, thresholds: Threshold, thresholdsCorrection?: Threshold) => {
+const feedForwardIteration = (weights: Weight, layers: Layer[], parameters: TrainingSettingsState, record: Record, labelId: string, isTraining: boolean, thresholds: Threshold, thresholdsCorrection?: Threshold) => {
     // Publish initial values for input and output layers
     const neuronsState: NeuronState = layers[0].neurons.reduce((acc, neuron, neuronIdx) => {
         const neuronId = neuron.id; // Ensure that neuron.id is a string
@@ -100,7 +100,7 @@ const feedForwardIteration = (weights: Weight, layers: Layer[], parameters: Trai
 
     Object.assign(neuronsState, layers[layers.length - 1].neurons.reduce((acc, neuron) => {
         acc[neuron.id] = {
-            value: record.label === neuron.name ? 1 : 0,
+            value: record[labelId] === neuron.name ? 1 : 0,
         };
         return acc;
     }, {} as NeuronState));

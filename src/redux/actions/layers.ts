@@ -1,8 +1,9 @@
 import { ActivationFunction, Layer, LayerType } from '../../types/neuralNetworkTypes';
-import { addHiddenLayer, deleteHiddenLayer } from '../reducers/neuralNetworkSlice';
+import { findUniqueValues } from '../../utils/utils';
+import { addHiddenLayer, deleteHiddenLayer, updateLayer } from '../reducers/neuralNetworkSlice';
 import { getNextLayer, getPreviousLayer } from '../selectors/layers';
 import { ActionFn } from '../store/store';
-import { addNeuron, refreshNeuronConnections } from './neurons';
+import { addNeuron, deleteNeuron, refreshNeuronConnections } from './neurons';
 
 
 export const addLayer = (): ActionFn => (dispatch, getState) => {
@@ -28,5 +29,27 @@ export const deleteLayer = (layerIndex: number): ActionFn => (dispatch, getState
         const previousLayer = getPreviousLayer(layer)(state)!;
         const nextLayer = getNextLayer(layer)(state)!;
         dispatch(refreshNeuronConnections(previousLayer, nextLayer));
+    }
+}
+
+export const updateOutputLayer = (layer: Layer, newActivationFunction: ActivationFunction): ActionFn => (dispatch, getState) => {
+    const oldActivationFunction = layer.activationFunction;
+    const newLayer = {
+        ...layer,
+        activationFunction: newActivationFunction,
+    };
+
+    if (layer.neurons.length === 2 && oldActivationFunction === ActivationFunction.Softmax) {
+        dispatch(deleteNeuron(layer.id, newLayer));
+    } else if (layer.neurons.length === 1 && newActivationFunction === ActivationFunction.Softmax){
+        const allData = getState().data;
+        const selectedData = allData.availableData.find(d => d.name === allData.selectedData)!;
+        const labelId = selectedData?.headers.slice(-1)[0];
+        const outputNeuronIds = findUniqueValues(selectedData.records.map(record => record[labelId]));
+        dispatch(addNeuron(layer.id, newLayer, outputNeuronIds[outputNeuronIds.length -1] as string));
+    } else {
+        dispatch(
+            updateLayer(newLayer)
+        );
     }
 }

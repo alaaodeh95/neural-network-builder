@@ -44,6 +44,8 @@ export interface TrainingSettingsState {
 export interface DataState {
     availableData: Data[];
     selectedData: string;
+    selectedDataLabelId: string;
+    selectedDataClasses: string[];
     weights: Weight;
     thresholds: Threshold;
 }
@@ -93,6 +95,7 @@ export enum ActivationFunction {
     Tanh = 'Tanh',
     Sigmoid = 'Sigmoid',
     Softmax = 'Softmax',
+    Linear = 'Linear',
     None = 'None'
 }
 

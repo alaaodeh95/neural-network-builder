@@ -31,6 +31,11 @@ const SIGMOID: ActivationFunction = {
     }
 };
 
+const LINEAR: ActivationFunction = {
+    output: x => x,
+    derivative: _ => 1,
+};
+
 const SOFTMAX: ActivationFunction = {
     output: (x) => {
         let exps = (x as number[]).map(v => Math.exp(v));
@@ -52,6 +57,8 @@ export const activateNeurons = (neuronLogit: number[], activationFunction: Activ
             return TANH.output(neuronLogit);
         case ActivationFunctionType.Softmax:
             return SOFTMAX.output(neuronLogit);
+        case ActivationFunctionType.Linear:
+            return LINEAR.output(neuronLogit);
     }
 
     throw new Error(`Unsupported type ${activationFunction}`);
@@ -67,6 +74,8 @@ export const calculateAFDerivative = (neuronLogit: number, activationFunction: A
             return SIGMOID.derivative(neuronLogit);
         case ActivationFunctionType.Tanh:
             return TANH.derivative(neuronLogit);
+        case ActivationFunctionType.Linear:
+            return LINEAR.derivative(neuronLogit);
     }
 
     throw new Error(`Unsupported type ${activationFunction}`);
