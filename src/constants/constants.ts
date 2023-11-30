@@ -32,5 +32,6 @@ export const samplesData = [
     "/samples/3Circles.csv",
     "/samples/Circles.csv",
     "/samples/Triangle.csv",
+    "/samples/Spiral.csv",
     "/samples/Quadrant.csv",
 ];
