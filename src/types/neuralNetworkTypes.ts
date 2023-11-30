@@ -48,6 +48,7 @@ export interface DataState {
     selectedDataClasses: string[];
     weights: Weight;
     thresholds: Threshold;
+    gridPredections: Record[];
 }
 
 export interface Model {
@@ -59,13 +60,14 @@ export interface Model {
 
 export enum CommandType {
     Train = 'Train',
-    Predict = 'Predict'
+    Predict = 'Predict',
 }
 
 export interface WorkerCommand {
     model: Model,
     data: Data,
-    type: CommandType
+    type: CommandType,
+    gridData: Record[],
 }
 
 
@@ -82,11 +84,13 @@ export interface TrainingWorkerResponse extends TestingWorkerResponse {
     validationAccuracy: number;
     numOfEpochs: number;
     isFinishedTraining: boolean;
+    gridPredections: Record[];
 }
 
 export interface TestingWorkerResponse extends WorkerResponse {
     testingLoss: number;
     testingAccuracy: number;
+    gridPredections?: Record[];
 }
 
 export enum ActivationFunction {

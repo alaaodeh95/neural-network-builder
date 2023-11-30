@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { DataState, Data, Weight, Threshold } from '../../types/neuralNetworkTypes';
+import { DataState, Data, Weight, Threshold, Record } from '../../types/neuralNetworkTypes';
+import { findUniqueValues } from '../../utils/utils';
+import { getSelectedData } from '../selectors';
 
 export const initialDataState: DataState = {
     availableData: [],
@@ -8,6 +10,7 @@ export const initialDataState: DataState = {
     thresholds: {},
     selectedDataClasses: [],
     selectedDataLabelId: '',
+    gridPredections: [],
 };
 
 export const dataSlice = createSlice({
@@ -17,7 +20,7 @@ export const dataSlice = createSlice({
         addAndSetTrainingData: (state: DataState, action: PayloadAction<Data>) => {
             const addedData = action.payload;
             state.selectedData = addedData.name;
-            const data = state.availableData.find(d => d.name === state.selectedData);
+            const data = getSelectedData(state);
             !data && state.availableData.push(addedData);
             return state;
         },
@@ -29,6 +32,11 @@ export const dataSlice = createSlice({
         },
         setSelectedData: (state: DataState, action: PayloadAction<string>) => {
             state.selectedData = action.payload;
+            const selectedDataObject = getSelectedData(state);
+            const labelId = selectedDataObject?.headers.slice(-1)[0]!;
+            const outputNeuronIds = findUniqueValues(selectedDataObject!.records!.map(record => record[labelId!])) as string[];
+            state.selectedDataClasses = outputNeuronIds;
+            state.selectedDataLabelId = labelId;
             return state;
         },
         setWeights: (state: DataState, action: PayloadAction<Weight>) => {
@@ -39,9 +47,21 @@ export const dataSlice = createSlice({
             state.thresholds = action.payload;
             return state;
         },
+        setSelectedDataClasses: (state: DataState, action: PayloadAction<string[]>) => {
+            state.selectedDataClasses = action.payload;
+            return state;
+        },
+        setSelectedDataLabelId: (state: DataState, action: PayloadAction<string>) => {
+            state.selectedDataLabelId = action.payload;
+            return state;
+        },
+        setGridPredections: (state: DataState, action: PayloadAction<Record[]>) => {
+            state.gridPredections = action.payload;
+            return state;
+        },
     }
 });
 
 
-export const { addAndSetTrainingData, initializeData, setSelectedData, setWeights, setThresholds } = dataSlice.actions;
+export const { addAndSetTrainingData, initializeData, setSelectedData, setWeights, setThresholds, setSelectedDataClasses, setSelectedDataLabelId, setGridPredections } = dataSlice.actions;
 export const dataReducer = dataSlice.reducer;

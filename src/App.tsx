@@ -3,10 +3,10 @@ import './styles/styles.css';
 import LoadingScreen from './components/LoadingScreen';
 import { NeuralNetworkBuilder } from './components/NeuralNetworkBuilder';
 import TrainingSettingsComponent from './components/TrainingSettings';
-import { fetchSamples } from './utils/utils';
+import { fetchSamples, generateGridPoints } from './utils/utils';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { initializeData, setSelectedData, setThresholds, setWeights } from './redux/reducers/dataSlice';
+import { initializeData, setGridPredections, setSelectedData, setThresholds, setWeights } from './redux/reducers/dataSlice';
 import { useAppDispatch } from './redux/store/hooks';
 import { buildInputAndOutputNeurons } from './redux/actions/neurons';
 import { useMemo } from 'react';
@@ -17,6 +17,7 @@ import LogsComponent from './components/LogsComponent';
 import { log } from './redux/reducers/logsSlice';
 import { Stack } from '@fluentui/react';
 import ChartComponent from './components/ChartComponent';
+import { getSelectedData } from './redux/selectors';
 
 function App() {
     const dispatch = useDispatch();
@@ -59,6 +60,7 @@ function App() {
                         dispatch(setWeights(response.weights!));
                         dispatch(setThresholds(response.thresholds!));
                         dispatch(setIsTrained(true));
+                        dispatch(setGridPredections(response.gridPredections));
                         dispatch(log(`Finished training: testing accuracy = ${response.testingAccuracy.toFixed(4)}, test loss = ${response.testingLoss.toFixed(4)}`));
                     }
                 }
@@ -66,6 +68,7 @@ function App() {
                 if (e.data.type === CommandType.Predict) {
                     const response = e.data as TrainingWorkerResponse;
                     dispatch(setPredictingState(false));
+                    response.gridPredections && dispatch(setGridPredections(response.gridPredections));
                     dispatch(log(`Finished predecting: testing accuracy = ${response.testingAccuracy.toFixed(4)}, test loss = ${response.testingLoss.toFixed(4)}`));
                 }
             };
@@ -74,15 +77,17 @@ function App() {
 
     useEffect(() => {
         if (mainWorker && (isTraining || isPredecting)) {
+            const selectedData = getSelectedData(data);
             mainWorker.postMessage({
                 type: isTraining ? CommandType.Train : CommandType.Predict,
-                data: data.availableData.find(d => d.name === data.selectedData),
+                data: selectedData,
                 model: {
                     architecture,
                     weights: isTraining ? {} : data.weights,
                     thresholds: isTraining ? {} : data.thresholds,
                     parameters,
                 },
+                gridData: isTraining && selectedData ? generateGridPoints(selectedData) : isPredecting && selectedData && !data.gridPredections.length ? generateGridPoints(selectedData) : undefined,
             } as WorkerCommand);
         }
     }, [mainWorker, isTraining, isPredecting, data, architecture, parameters]);

@@ -13,7 +13,10 @@ export const outputLayerAF: ISelectOption[] = [
     { key: ActivationFunction.Softmax, text: ActivationFunction.Softmax },
     { key: ActivationFunction.Tanh, text: ActivationFunction.Tanh },
     { key: ActivationFunction.Sigmoid, text: ActivationFunction.Sigmoid },
-    { key: ActivationFunction.Linear, text: ActivationFunction.Linear },
+];
+
+export const outputLayerAFSoftmax: ISelectOption[] = [
+    { key: ActivationFunction.Softmax, text: ActivationFunction.Softmax },
 ];
 
 export const lossFunctionSelectOptions: ISelectOption[] = [
@@ -25,7 +28,8 @@ export const lossFunctionSelectOptions: ISelectOption[] = [
 
 export const samplesData = [
     "/samples/Linear.csv",
+    "/samples/Linear2.csv",
     "/samples/Circles.csv",
+    "/samples/Triangle.csv",
     "/samples/Quadrant.csv",
-    "/samples/Sample 1.csv",
 ];

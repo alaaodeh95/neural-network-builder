@@ -21,7 +21,7 @@ import Papa from 'papaparse';
 import { useAppDispatch } from '../redux/store/hooks';
 import { buildInputAndOutputNeurons } from '../redux/actions/neurons';
 import styles from '../styles/TrainingSettings.module.css';
-import { addAndSetTrainingData, setSelectedData, setThresholds, setWeights } from '../redux/reducers/dataSlice';
+import { addAndSetTrainingData, setGridPredections, setSelectedData, setThresholds, setWeights } from '../redux/reducers/dataSlice';
 import { saveModel } from '../redux/actions/model';
 import { setNetwork } from '../redux/reducers/neuralNetworkSlice';
 
@@ -172,6 +172,9 @@ const TrainingSettings: React.FC = () => {
 
     const handleSelectDataChange = (event: React.FormEvent<HTMLDivElement>, option?: IDropdownOption, index?: number) => {
         if (option) {
+            dispatch(setWeights({}));
+            dispatch(setThresholds({}));
+            dispatch(setGridPredections([]));
             dispatch(setSelectedData(option.key as string));
             appDispatch(buildInputAndOutputNeurons());
         }

@@ -1,5 +1,4 @@
 import { ActivationFunction, Connection, Layer, LayerType, Neuron } from '../../types/neuralNetworkTypes';
-import { findUniqueValues } from '../../utils/utils';
 import { addHiddenLayer, updateLayer } from '../reducers/neuralNetworkSlice';
 import { getLayer, getNextLayer, getPreviousLayer } from '../selectors/layers';
 import { ActionFn } from '../store/store';
@@ -70,14 +69,27 @@ export const buildInputAndOutputNeurons = (numOfHiddenNeurons?: number): ActionF
     }
 
     // Output Layer handling
-    const labelId = data.headers.slice(-1)[0];
-    const outputNeuronIds = findUniqueValues(data.records.map(record => record[labelId]));
-    const outputNeurons = outputNeuronIds.map((outputId, idx) => ({
-        id: `neuron-output-${idx}`,
-        name: outputId as string,
-        connections: []
-    }));
-    dispatch(updateLayer({ ...network.outputLayer, neurons: outputNeurons }));
+    const outputNeuronIds = getState().data.selectedDataClasses;
+    let outputNeurons: Neuron[] = [];
+    if (network.outputLayer.activationFunction === ActivationFunction.Softmax){
+        outputNeurons = outputNeuronIds.map((outputId, idx) => ({
+            id: `neuron-output-${idx}`,
+            name: outputId as string,
+            connections: []
+        }));
+    } else {
+        outputNeurons.push({
+            id: 'neuron-output-0',
+            name: outputNeuronIds[0] as string,
+            connections: []
+    })}
+
+    const outpuLayerUpdated = { ...network.outputLayer, neurons: outputNeurons };
+    dispatch(updateLayer(outpuLayerUpdated));
+
+    if (firstHidden.type === LayerType.Output) {
+        firstHidden = outpuLayerUpdated;
+    }
 
     // Handle the layer before output (Only if not input)
     if (lastHidden.type === LayerType.Hidden) {

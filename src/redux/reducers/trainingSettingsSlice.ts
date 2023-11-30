@@ -2,10 +2,10 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { LossFunction, TrainingSettingsState } from '../../types/neuralNetworkTypes';
 
 export const initialState: TrainingSettingsState = {
-    learningRate: 0.1,
+    learningRate: 0.05,
     maxEpochs: 100,
-    lossFunction: LossFunction.CrossEntropy,
-    stopLossValue: 0.05,
+    lossFunction: LossFunction.MSE,
+    stopLossValue: 0.005,
     trainingPercentage: 70, // Default values can be set as needed
     validationPercentage: 15,
     testingPercentage: 15,

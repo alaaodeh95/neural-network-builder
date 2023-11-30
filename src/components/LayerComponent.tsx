@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { getNumberOfLayers } from '../redux/selectors/layers';
 import { Dropdown, IDropdownOption } from '@fluentui/react';
 import { updateLayer } from '../redux/reducers/neuralNetworkSlice';
-import { hiddenLayersAF, outputLayerAF } from '../constants/constants';
+import { hiddenLayersAF, outputLayerAF, outputLayerAFSoftmax } from '../constants/constants';
 import { updateOutputLayer } from '../redux/actions/layers';
 
 interface LayerProps {
@@ -18,6 +18,7 @@ interface LayerProps {
 export const LayerComponent: React.FC<LayerProps> = ({ layer }) => {
     const dispatch = useAppDispatch();
     const numberOfLayers = useSelector(getNumberOfLayers);
+    const numberOfNeurons = layer.neurons.length;
 
     const handleAddNeuron = () => {
         dispatch(addNeuron(layer.id));
@@ -48,7 +49,7 @@ export const LayerComponent: React.FC<LayerProps> = ({ layer }) => {
             } ${layer.type === LayerType.Hidden ? styles.hiddenLayer : ''} `}>
             {layer.type !== LayerType.Input && (
                 <Dropdown
-                    options={layer.type === LayerType.Hidden ? hiddenLayersAF : outputLayerAF}
+                    options={layer.type === LayerType.Hidden ? hiddenLayersAF : numberOfNeurons <=2 ? outputLayerAF : outputLayerAFSoftmax}
                     onChange={onActivationChange}
                     selectedKey={layer.activationFunction}
                     className={styles.activationFunction}

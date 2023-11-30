@@ -2,7 +2,6 @@
 .chart-container {
     display: flex;
     justify-content: flex-start;
-    height: 100vh; /* Use the full viewport height */
     width: 460px;
   }
   
@@ -34,6 +33,6 @@
     background: #F5F5F5; /* Light gray, almost white */
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Optional: subtle shadow for depth */
     text-align: center; /* Center the text */
-    margin: 0.5em 0; /* Add some space above and below the text */
+    /*margin: 0.5em 0;  Add some space above and below the text */
     text-align: center;
   }
