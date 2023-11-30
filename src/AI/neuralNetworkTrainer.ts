@@ -30,6 +30,8 @@ export const trainNeuralNetwork = (
             break;
         }
 
+        epoch % 5 === 0 && runNeuralNetworkForRecords(gridData, labelId, weights, thresholds, layers, parameters, false, false)!;
+
         // Send regular update
         epoch !== parameters.maxEpochs &&
             self.postMessage({
@@ -42,6 +44,7 @@ export const trainNeuralNetwork = (
                 validationAccuracy,
                 numOfEpochs: epoch,
                 isFinishedTraining: false,
+                gridPredections: epoch % 5 === 0  ? gridData : undefined
             } as TrainingWorkerResponse);
     }
 

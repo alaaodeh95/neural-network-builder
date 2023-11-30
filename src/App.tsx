@@ -60,9 +60,9 @@ function App() {
                         dispatch(setWeights(response.weights!));
                         dispatch(setThresholds(response.thresholds!));
                         dispatch(setIsTrained(true));
-                        dispatch(setGridPredections(response.gridPredections));
                         dispatch(log(`Finished training: testing accuracy = ${response.testingAccuracy.toFixed(4)}, test loss = ${response.testingLoss.toFixed(4)}`));
                     }
+                    response.gridPredections && dispatch(setGridPredections(response.gridPredections));
                 }
 
                 if (e.data.type === CommandType.Predict) {
@@ -90,7 +90,7 @@ function App() {
                 gridData: isTraining && selectedData ? generateGridPoints(selectedData) : isPredecting && selectedData && !data.gridPredections.length ? generateGridPoints(selectedData) : undefined,
             } as WorkerCommand);
         }
-    }, [mainWorker, isTraining, isPredecting, data, architecture, parameters]);
+    }, [mainWorker, isTraining, isPredecting, architecture, parameters]);
 
     return (
         <div>
