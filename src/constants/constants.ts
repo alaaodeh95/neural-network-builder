@@ -29,6 +29,7 @@ export const lossFunctionSelectOptions: ISelectOption[] = [
 export const samplesData = [
     "/samples/Linear.csv",
     "/samples/Linear2.csv",
+    "/samples/3Circles.csv",
     "/samples/Circles.csv",
     "/samples/Triangle.csv",
     "/samples/Quadrant.csv",
