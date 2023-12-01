@@ -30,7 +30,7 @@ export const trainNeuralNetwork = (
             break;
         }
 
-        epoch % 5 === 0 && runNeuralNetworkForRecords(gridData, labelId, weights, thresholds, layers, parameters, false, false)!;
+        epoch % 5 === 0 && gridData && runNeuralNetworkForRecords(gridData, labelId, weights, thresholds, layers, parameters, false, false)!;
 
         // Send regular update
         epoch !== parameters.maxEpochs &&
@@ -50,7 +50,7 @@ export const trainNeuralNetwork = (
 
     // After all epochs run the unseen test data
     const { accuracy: testingAccuracy, lossValue: testingLoss } = runNeuralNetworkForRecords(testingData, labelId, weights, thresholds, layers, parameters, false, true)!;
-    runNeuralNetworkForRecords(gridData, labelId, weights, thresholds, layers, parameters, false, false)!;
+    gridData && runNeuralNetworkForRecords(gridData, labelId, weights, thresholds, layers, parameters, false, false)!;
 
     self.postMessage({
         type: CommandType.Train,
@@ -112,8 +112,8 @@ export const runNeuralNetworkForRecords = (
         }
 
         const outputNeurons = outputLayer.neurons;
+        const firstOutputNeuronState = neuronsState[outputLayer.neurons[0].id!];
         if (evaluate) {
-            const firstOutputNeuronState = neuronsState[outputLayer.neurons[0].id!];
             let predictVector = outputNeurons.map(neuron => neuronsState[neuron.id].predicted!);
             let actualVector = outputNeurons.map(neuron => neuronsState[neuron.id].value!);
             numberOfTrainingSamples++;
@@ -136,6 +136,8 @@ export const runNeuralNetworkForRecords = (
                 return neuronsState[neuron.id].predicted! > neuronsState[array[maxIndex].id].predicted! ? currentIndex : maxIndex;
             }, 0);
             record.predection = indexOfRightPrediction;
+        } else {
+            record.predection = outputActivaition === ActivationFunction.Tanh ? (firstOutputNeuronState.predicted! < 0 ? 1 : 0) : (firstOutputNeuronState.predicted! < 0.5 ? 1 : 0);
         }
     }
 

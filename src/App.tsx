@@ -10,7 +10,7 @@ import { initializeData, setGridPredections, setSelectedData, setThresholds, set
 import { useAppDispatch } from './redux/store/hooks';
 import { buildInputAndOutputNeurons } from './redux/actions/neurons';
 import { useMemo } from 'react';
-import { CommandType, TrainingWorkerResponse, WorkerCommand, WorkerResponse } from './types/neuralNetworkTypes';
+import { ActivationFunction, CommandType, TrainingWorkerResponse, WorkerCommand, WorkerResponse } from './types/neuralNetworkTypes';
 import { RootState } from './redux/store/store';
 import { setIsTrained, setPredictingState, setTrainingState } from './redux/reducers/trainingSettingsSlice';
 import LogsComponent from './components/LogsComponent';
@@ -87,7 +87,7 @@ function App() {
                     thresholds: isTraining ? {} : data.thresholds,
                     parameters,
                 },
-                gridData: isTraining && selectedData ? generateGridPoints(selectedData) : isPredecting && selectedData && !data.gridPredections.length ? generateGridPoints(selectedData) : undefined,
+                gridData: selectedData && (isTraining || (isPredecting && !data.gridPredections.length)) && generateGridPoints(selectedData!)
             } as WorkerCommand);
         }
     }, [mainWorker, isTraining, isPredecting, architecture, parameters]);
