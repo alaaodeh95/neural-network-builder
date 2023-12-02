@@ -7,11 +7,7 @@ import { DataState, Record, Threshold, Weight } from '../types/neuralNetworkType
 import { Stack } from '@fluentui/react';
 import { getSelectedData } from '../redux/selectors';
 
-export interface ChartComponentProps {
-    isOriginalData: boolean;
-}
-
-const ChartComponent: React.FC<ChartComponentProps> = () => {
+const ChartComponent = () => {
     const d3Container = useRef(null);
     const dataState = useSelector((state: RootState) => state.data);
     const noHiddenLayers = useSelector((state: RootState) => state.neuralNetwork.hiddenLayers.length === 0);

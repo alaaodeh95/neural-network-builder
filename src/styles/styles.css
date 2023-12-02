@@ -9,3 +9,7 @@ html, body {
   display: grid;
   place-items: center;
 }
+
+.main-hidden {
+  display: none;
+}
