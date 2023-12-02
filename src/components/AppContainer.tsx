@@ -15,13 +15,12 @@ import { log } from './../redux/reducers/logsSlice';
 import { Stack } from '@fluentui/react';
 import ChartComponent from './ChartComponent';
 import { getSelectedData } from './../redux/selectors';
-import './../styles/styles.css';
 
 interface AppContainerProps {
-    isLoading: boolean;
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AppContainer: React.FC<AppContainerProps> = ({ isLoading }) => {
+const AppContainer: React.FC<AppContainerProps> = ({ setIsLoading }) => {
     const dispatch = useDispatch();
     const appDispatch = useAppDispatch();
     const isTraining = useSelector((state: RootState) => state.settings.isTraining);
@@ -35,8 +34,9 @@ const AppContainer: React.FC<AppContainerProps> = ({ isLoading }) => {
             dispatch(initializeData(data));
             dispatch(setSelectedData(data[0].name));
             appDispatch(buildInputAndOutputNeurons());
+            setIsLoading(false);
         });
-    }, [appDispatch, dispatch]);
+    }, [appDispatch, dispatch, setIsLoading]);
 
     const mainWorker: Worker = useMemo(() => new Worker(new URL('./../AI/worker.ts', import.meta.url)), []);
 
@@ -92,7 +92,7 @@ const AppContainer: React.FC<AppContainerProps> = ({ isLoading }) => {
     }, [mainWorker, isTraining, isPredecting, architecture, parameters]);
 
     return (
-        <Stack horizontal className={isLoading ? 'main-hidden' : ''}>
+        <Stack horizontal>
             <div>
                 <TrainingSettingsComponent />
                 <NeuralNetworkBuilder />

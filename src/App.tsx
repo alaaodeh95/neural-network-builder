@@ -5,10 +5,12 @@ import AppContainer from './components/AppContainer';
 
 const App = () => {
     const [isLoading, setIsLoading] = useState(true);
-    window.onload = () => setIsLoading(false);
     return (
         <>
-            {isLoading && <LoadingScreen />} : <AppContainer isLoading={isLoading} />
+            {isLoading && <LoadingScreen />} :
+            <div className={isLoading ? 'main-hidden' : ''}>
+                <AppContainer setIsLoading={setIsLoading} />
+            </div>
         </>
     );
 };
