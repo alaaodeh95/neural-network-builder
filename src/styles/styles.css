@@ -6,7 +6,6 @@ html, body {
 }
 
 #root {
-  display: flex;
-  justify-content: center; /* Align horizontal */
-  align-items: center; 
+  display: grid;
+  place-items: center;
 }

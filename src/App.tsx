@@ -35,7 +35,7 @@ function App() {
         fetchSamples().then(data => {
             dispatch(initializeData(data));
             dispatch(setSelectedData(data[0].name));
-            appDispatch(buildInputAndOutputNeurons(2));
+            appDispatch(buildInputAndOutputNeurons());
             setIsLoading(false);
         });
     }, [appDispatch, dispatch, setIsLoading]);
